@@ -1,0 +1,177 @@
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Allerta+Stencil&display=swap');
+
+/* Remove unwanted scrollbars */
+html, body {
+  overflow-x: hidden; /* Prevents horizontal scrolling */
+  overflow-y: hidden; /* Prevents vertical scrolling */
+  height: 100vh;     /* Ensures full height without extra space */
+}
+
+a {
+  background-color: #232323;
+  color: white;
+  padding: 0.3px 0.3px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+body {
+  background: url('bg3.png');
+  color: #ffffff;
+  text-align: center;
+  font-family: 'Allerta Stencil', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-position: center; /* Ensure initial centering */
+  animation: backgroundShift 9s infinite alternate, shakeBackground 15s infinite;
+  /* Ensure full height and flexbox */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+@keyframes backgroundShift {
+  0%   { background-color: #000; }
+  10%  { background-color: #111; }
+  20%  { background-color: #101010; }
+  30%  { background-color: #222; }
+  40%  { background-color: #000; }
+  50%  { background-color: #111; }
+  60%  { background-color: #222; }
+  70%  { background-color: #202020; }
+  80%  { background-color: #000; }
+  90%  { background-color: #111; }
+  100% { background-color: #222; }
+}
+
+header {
+  background: rgba(0, 0, 0, 1) url('logo2.png') no-repeat top center;
+  padding: 70px;
+  text-align: center;
+}
+
+nav ul {
+  list-style: none;
+  position: absolute;
+  top: 90px;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+nav ul li {
+  display: inline;
+  margin: 8px;
+}
+
+nav ul li a {
+  color: #666666;
+  text-decoration: none;
+  animation: colorShift 2s infinite alternate;
+  text-shadow: 3px 3px 2px rgba(128, 128, 128, 1),
+               -3px -4px 1px rgba(43, 43, 43, 1);
+}
+
+@keyframes colorShift {
+  0%   { color: #000; }
+  50%  { color: #ddd; }
+  100% { color: #fff; }
+}
+
+/* Main Section - Stretches only when needed */
+main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column; /* Stacks elements inside main */
+  align-items: center;
+  width: 100%;
+}
+
+/* Content wrapper takes up remaining space */
+.content-wrapper {
+  flex-grow: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Centers content */
+}
+
+/* Ensures the quote section is always above the footer */
+#quote-section {
+  text-align: center;
+  padding: 20px;
+  margin-top: auto; /* Only pushes it down when there's extra space */
+  width: 100%;
+  animation: shake 0.1s infinite;
+}
+
+@keyframes shake {
+  0%   { transform: translate(1px, 0); }
+  25%  { transform: translate(-1px, 0); }
+  50%  { transform: translate(1px, 0); }
+  75%  { transform: translate(-1px, 0); }
+  100% { transform: translate(1px, 0); }
+}
+
+/* Footer stays at the bottom */
+footer {
+  background: rgba(0, 0, 0, 0.8);
+  padding: 10px;
+  text-align: center;
+  width: 100%;
+}
+
+/* --- Keyframes for occasional background shake --- */
+@keyframes shakeBackground {
+  0%, 95% { background-position: center; }
+  96% { background-position: calc(50% + 2px) calc(50% - 2px); }
+  97% { background-position: calc(50% - 2px) calc(50% + 2px); }
+  98% { background-position: calc(50% + 2px) calc(50% + 2px); }
+  99% { background-position: calc(50% - 2px) calc(50% - 2px); }
+  100% { background-position: center; }
+}
+
+/* --- Glitch effect for nav links --- */
+/* This override applies the glitch animation and styling without modifying HTML */
+nav ul li a {
+  background: none;
+  color: white;
+  padding: 0;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 1em; /* Adjust as needed */
+  font-weight: bold;
+  position: relative;
+  text-shadow: 0.05em 0 0 #00fffc, 
+               -0.03em -0.04em 0 #fc00ff, 
+               0.025em 0.04em 0 #fffc00;
+  animation: glitch 725ms infinite;
+}
+
+@keyframes glitch {
+  0% {
+    text-shadow: 0.05em 0 0 #00fffc, -0.03em -0.04em 0 #fc00ff, 0.025em 0.04em 0 #fffc00;
+  }
+  15% {
+    text-shadow: 0.05em 0 0 #00fffc, -0.03em -0.04em 0 #fc00ff, 0.025em 0.04em 0 #fffc00;
+  }
+  16% {
+    text-shadow: -0.05em -0.025em 0 #00fffc, 0.025em 0.035em 0 #fc00ff, -0.05em -0.05em 0 #fffc00;
+  }
+  49% {
+    text-shadow: -0.05em -0.025em 0 #00fffc, 0.025em 0.035em 0 #fc00ff, -0.05em -0.05em 0 #fffc00;
+  }
+  50% {
+    text-shadow: 0.05em 0.035em 0 #00fffc, 0.03em 0 0 #fc00ff, 0 -0.04em 0 #fffc00;
+  }
+  99% {
+    text-shadow: 0.05em 0.035em 0 #00fffc, 0.03em 0 0 #fc00ff, 0 -0.04em 0 #fffc00;
+  }
+  100% {
+    text-shadow: -0.05em 0 0 #00fffc, -0.025em -0.04em 0 #fc00ff, -0.04em -0.025em 0 #fffc00;
+  }
+}

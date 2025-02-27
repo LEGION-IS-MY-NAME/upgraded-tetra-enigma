@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="player.css">
+    <title>RiotLegion - Home</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="about.html">About</a></li>
+                <li><a href="music.html">Music</a></li>
+                <li><a href="merch.html">Merch</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="forum.html">Forum</a></li>
+            </ul>
+        </nav>
+    </header>
+    <br>
+
+    <main>
+        <div class="content-wrapper">
+            <iframe width="445" height="250" src="https://www.youtube.com/embed/M1mgl_Q6T6Q" title="RIOTLEGION - NEVER LOOK BACK" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <br>
+        <iframe id="myMusicPlayer" src="player.html" width="300" height="40" style="border:none; overflow:hidden;"></iframe>
+
+        <main>
+            <section id="quote-section">
+                <p id="quote"></p>
+            </section>
+        </main>
+
+        <footer>
+            <p>Follow us on <a href="https://www.instagram.com/riotlegion.official/">Instagram</a>, <a href="https://www.facebook.com/RiotLegionOfficial/">Facebook</a>, <a href="https://www.youtube.com/channel/UCLt4WbnqjuGehHOc8QdeaLw">YouTube</a></p>
+        </footer>
+
+        <script src="script.js"></script>
+
+        <script>
+            // Get the music player iframe
+            const musicPlayerIframe = document.getElementById('myMusicPlayer');
+
+            // Check if a current song index is stored in sessionStorage
+            const savedSongIndex = sessionStorage.getItem('currentSongIndex');
+
+            // If an index was found, send a message to the iframe to load the song
+            if (savedSongIndex) {
+                musicPlayerIframe.contentWindow.postMessage({ songIndex: savedSongIndex }, '*');
+            }
+        </script>
+    </main>
+</body>
+</html>

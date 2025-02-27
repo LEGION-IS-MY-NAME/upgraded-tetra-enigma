@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="styles.css">
+      <title>Music & Discography</title>
+    </head>
+    <body>
+      <header>
+       
+        <nav>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="merch.html">Merch</a></li>
+            <li><a href="blog.html">Blog</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="forum.html">Forum</a></li>
+          </ul>
+        </nav>
+      </header>
+	   <h1>Music & Discography</h1>
+      <main>
+        <h2>Discography</h2>
+        <ul>
+          <li>2012 - Kinetik Festival Volume 5 (Various Artists, Artoffact Records)</li>
+          <li>2012 - FGFC820 – Homeland Insecurity (Deathwatch Asia)</li>
+          <li>2013 - "Legion of Chaos" (Promo Edition)</li>
+          <li>2014 - Empyrean Asunder – Hate: Expanded & Remastered</li>
+          <li>2015 - "GOD(B)LESS"</li>
+          <li>2016 - "Trigger Warning" (Blind Mice Productions)</li>
+          <li>2020 - "Machine Liberation" (Blind Mice Productions)</li>
+          <li>2022 - Refuse: Volume One (Crunch Pod Records)</li>
+        </ul><br>
+        <iframe id="myMusicPlayer" src="player.html" width="300" height="40" style="border:none; overflow:hidden;"></iframe>      </main>
+      <footer>
+        <p>Follow us on <a href="https://www.instagram.com/riotlegion.official/">Instagram</a>, <a href="https://www.facebook.com/RiotLegionOfficial/">Facebook</a>, <a href="https://www.youtube.com/channel/UCLt4WbnqjuGehHOc8QdeaLw">YouTube</a></p>
+      </footer>
+            <script>
+            // Get the music player iframe
+            const musicPlayerIframe = document.getElementById('myMusicPlayer');
+
+            // Check if a current song index is stored in sessionStorage
+            const savedSongIndex = sessionStorage.getItem('currentSongIndex');
+
+            // If an index was found, send a message to the iframe to load the song
+            if (savedSongIndex) {
+                musicPlayerIframe.contentWindow.postMessage({ songIndex: savedSongIndex }, '*');
+            }
+        </script>
+	</body>
+
+    </html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Audio Player</title>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+        }
+        body {
+            font-family: 'Special Elite', cursive;
+            background-color: transparent;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+        }
+        #audioPlayerContainer {
+            width: auto;
+            height: 40px;
+            overflow: hidden;
+            display: inline-block;
+        }
+        #audioPlayer {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            height: 32px;
+        }
+        button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            padding: 0;
+        }
+        img {
+            width: 100%;
+            height: 100%;
+        }
+        #songTitle {
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+
+<div id="audioPlayerContainer">
+    <div id="audioPlayer">
+        <button id="prevBtn"><img src="prev.png" alt="Prev"></button>
+        <button id="playPauseBtn"><img src="play.png" alt="Play"></button>
+        <button id="stopBtn"><img src="stop.png" alt="Stop"></button>
+        <button id="nextBtn"><img src="next.png" alt="Next"></button>
+        <button id="shuffleBtn"><img src="shuffle.png" alt="Shuffle"></button>
+        <span id="songTitle">Loading...</span>
+    </div>
+</div>
+
+<audio id="audio"></audio>
+
+<script>
+    const audio = document.getElementById("audio");
+    const playPauseBtn = document.getElementById("playPauseBtn");
+    const stopBtn = document.getElementById("stopBtn");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const shuffleBtn = document.getElementById("shuffleBtn");
+    const songTitle = document.getElementById("songTitle");
+
+   const songs = [
+        { title: "Escape", src: "https://od.lk/s/Nl8yMTMwMzEwNzRf/escape.mp3" },
+        { title: "Inner Self Destruct", src: "https://od.lk/s/Nl8yMTMwMzExMTZf/ISD.mp3" },
+        { title: "Let Them Know", src: "https://od.lk/s/Nl8yMTMwMzExMjVf/ltk.mp3" },
+        { title: "Never Look Back", src: "https://od.lk/s/Nl8yMTMwMzExNTdf/nlb.mp3" },
+        { title: "We Own The Night (Cold and Bare Mix)", src: "https://od.lk/d/Nl8yMTMwMzExODlf/wotn.mp3" }
+    ];
+
+    let currentSongIndex = 0;
+
+    function loadSong(index) {
+        audio.src = songs[index].src;
+        songTitle.textContent = songs[index].title;
+        audio.load();
+
+        // Store the current song index in sessionStorage
+        sessionStorage.setItem('currentSongIndex', index);
+    }
+
+    function togglePlayPause() {
+        if (audio.paused) {
+            audio.play();
+            playPauseBtn.children[0].src = "pause.png";
+        } else {
+            audio.pause();
+            playPauseBtn.children[0].src = "play.png";
+        }
+    }
+
+    function stopAudio() {
+        audio.pause();
+        audio.currentTime = 0;
+        playPauseBtn.children[0].src = "play.png";
+    }
+
+    function nextSong() {
+        currentSongIndex = (currentSongIndex + 1) % songs.length;
+        loadSong(currentSongIndex);
+        audio.play();
+    }
+
+    function prevSong() {
+        currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+        loadSong(currentSongIndex);
+        audio.play();
+    }
+
+    function shuffleSong() {
+        let newIndex;
+        do {
+            newIndex = Math.floor(Math.random() * songs.length);
+        } while (newIndex === currentSongIndex);
+        currentSongIndex = newIndex;
+        loadSong(currentSongIndex);
+        audio.play();
+    }
+
+    playPauseBtn.addEventListener("click", togglePlayPause);
+    stopBtn.addEventListener("click", stopAudio);
+    nextBtn.addEventListener("click", nextSong);
+    prevBtn.addEventListener("click", prevSong);
+    shuffleBtn.addEventListener("click", shuffleSong);
+
+    // Listen for messages from the parent window
+    window.addEventListener('message', (event) => {
+        if (event.data.songIndex) {
+            // Load the song with the specified index
+            currentSongIndex = event.data.songIndex;
+            loadSong(currentSongIndex);
+        }
+    });
+
+    loadSong(currentSongIndex);
+</script>
+
+</body>
+</html>
