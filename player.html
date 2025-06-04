@@ -88,6 +88,13 @@
   ];
 
   let currentSongIndex = 0;
+  const savedIndex = sessionStorage.getItem('currentSongIndex');
+  const savedTime = sessionStorage.getItem('currentTime');
+  const wasPlaying = sessionStorage.getItem('isPlaying') === 'true';
+
+  if (savedIndex !== null) {
+    currentSongIndex = parseInt(savedIndex, 10);
+  }
 
   const loadSong = index => {
     audio.src = songs[index].src;
@@ -100,9 +107,11 @@
     if (audio.paused) {
       audio.play();
       playPauseBtn.firstElementChild.src = 'pause.png';
+      sessionStorage.setItem('isPlaying', true);
     } else {
       audio.pause();
       playPauseBtn.firstElementChild.src = 'play.png';
+      sessionStorage.setItem('isPlaying', false);
     }
   };
 
@@ -110,18 +119,22 @@
     audio.pause();
     audio.currentTime = 0;
     playPauseBtn.firstElementChild.src = 'play.png';
+    sessionStorage.setItem('currentTime', 0);
+    sessionStorage.setItem('isPlaying', false);
   };
 
   const nextSong = () => {
     currentSongIndex = (currentSongIndex + 1) % songs.length;
     loadSong(currentSongIndex);
     audio.play();
+    sessionStorage.setItem('isPlaying', true);
   };
 
   const prevSong = () => {
     currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
     loadSong(currentSongIndex);
     audio.play();
+    sessionStorage.setItem('isPlaying', true);
   };
 
   const shuffleSong = () => {
@@ -132,22 +145,38 @@
     currentSongIndex = newIndex;
     loadSong(currentSongIndex);
     audio.play();
+    sessionStorage.setItem('isPlaying', true);
   };
 
-  playPauseBtn.addEventListener('click', togglePlayPause);
-  stopBtn.addEventListener('click', stopAudio);
+  playPauseBtn.addEventListener('click', () => {
+    togglePlayPause();
+    sessionStorage.setItem('isPlaying', !audio.paused);
+  });
+  stopBtn.addEventListener('click', () => {
+    stopAudio();
+    sessionStorage.setItem('isPlaying', false);
+    sessionStorage.setItem('currentTime', 0);
+  });
   nextBtn.addEventListener('click', nextSong);
   prevBtn.addEventListener('click', prevSong);
   shuffleBtn.addEventListener('click', shuffleSong);
 
-  window.addEventListener('message', ({ data }) => {
-    if (data.songIndex !== undefined) {
-      currentSongIndex = data.songIndex;
-      loadSong(currentSongIndex);
-    }
+  audio.addEventListener('timeupdate', () => {
+    sessionStorage.setItem('currentTime', audio.currentTime);
+  });
+  window.addEventListener('beforeunload', () => {
+    sessionStorage.setItem('currentTime', audio.currentTime);
+    sessionStorage.setItem('isPlaying', !audio.paused);
   });
 
   loadSong(currentSongIndex);
+  if (savedTime !== null) {
+    audio.currentTime = parseFloat(savedTime);
+  }
+  if (wasPlaying) {
+    audio.play();
+    playPauseBtn.firstElementChild.src = 'pause.png';
+  }
 </script>
 
 </body>
