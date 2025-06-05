@@ -28,5 +28,36 @@ const quotes = [
       currentQuote = (currentQuote + 1) % quotes.length;
     }
 
-    setInterval(changeQuote, 5000);
-    changeQuote();
+setInterval(changeQuote, 5000);
+changeQuote();
+
+// basic PJAX navigation to keep the player alive
+function loadContent(url, addHistory = true) {
+  fetch(url)
+    .then(r => r.text())
+    .then(html => {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const newMain = doc.querySelector('main');
+      if (newMain) {
+        document.getElementById('content').innerHTML = newMain.innerHTML;
+      }
+      if (addHistory) {
+        history.pushState({}, '', url);
+      }
+    });
+}
+
+function setupNavigation() {
+  document.querySelectorAll('nav a').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      loadContent(a.getAttribute('href'));
+    });
+  });
+}
+
+window.addEventListener('popstate', () => {
+  loadContent(location.pathname, false);
+});
+
+document.addEventListener('DOMContentLoaded', setupNavigation);
