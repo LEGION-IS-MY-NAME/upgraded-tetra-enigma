@@ -71,88 +71,114 @@
 <audio id="audio"></audio>
 
 <script>
-    const audio = document.getElementById("audio");
-    const playPauseBtn = document.getElementById("playPauseBtn");
-    const stopBtn = document.getElementById("stopBtn");
-    const prevBtn = document.getElementById("prevBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    const shuffleBtn = document.getElementById("shuffleBtn");
-    const songTitle = document.getElementById("songTitle");
+  const audio = document.getElementById('audio');
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  const stopBtn = document.getElementById('stopBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const shuffleBtn = document.getElementById('shuffleBtn');
+  const songTitle = document.getElementById('songTitle');
 
-   const songs = [
-        { title: "Escape", src: "https://od.lk/s/Nl8yMTMwMzEwNzRf/escape.mp3" },
-        { title: "Inner Self Destruct", src: "https://od.lk/s/Nl8yMTMwMzExMTZf/ISD.mp3" },
-        { title: "Let Them Know", src: "https://od.lk/s/Nl8yMTMwMzExMjVf/ltk.mp3" },
-        { title: "Never Look Back", src: "https://od.lk/s/Nl8yMTMwMzExNTdf/nlb.mp3" },
-        { title: "We Own The Night (Cold and Bare Mix)", src: "https://od.lk/d/Nl8yMTMwMzExODlf/wotn.mp3" }
-    ];
+  const songs = [
+    { title: 'Escape', src: 'https://od.lk/s/Nl8yMTMwMzEwNzRf/escape.mp3' },
+    { title: 'Inner Self Destruct', src: 'https://od.lk/s/Nl8yMTMwMzExMTZf/ISD.mp3' },
+    { title: 'Let Them Know', src: 'https://od.lk/s/Nl8yMTMwMzExMjVf/ltk.mp3' },
+    { title: 'Never Look Back', src: 'https://od.lk/s/Nl8yMTMwMzExNTdf/nlb.mp3' },
+    { title: 'We Own The Night (Cold and Bare Mix)', src: 'https://od.lk/d/Nl8yMTMwMzExODlf/wotn.mp3' }
+  ];
 
-    let currentSongIndex = 0;
+  let currentSongIndex = 0;
+  const savedIndex = sessionStorage.getItem('currentSongIndex');
+  const savedTime = sessionStorage.getItem('currentTime');
+  const wasPlaying = sessionStorage.getItem('isPlaying') === 'true';
 
-    function loadSong(index) {
-        audio.src = songs[index].src;
-        songTitle.textContent = songs[index].title;
-        audio.load();
+  if (savedIndex !== null) {
+    currentSongIndex = parseInt(savedIndex, 10);
+  }
 
-        // Store the current song index in sessionStorage
-        sessionStorage.setItem('currentSongIndex', index);
+  const loadSong = index => {
+    audio.src = songs[index].src;
+    songTitle.textContent = songs[index].title;
+    audio.load();
+    sessionStorage.setItem('currentSongIndex', index);
+  };
+
+  const togglePlayPause = () => {
+    if (audio.paused) {
+      audio.play();
+      playPauseBtn.firstElementChild.src = 'pause.png';
+      sessionStorage.setItem('isPlaying', true);
+    } else {
+      audio.pause();
+      playPauseBtn.firstElementChild.src = 'play.png';
+      sessionStorage.setItem('isPlaying', false);
     }
+  };
 
-    function togglePlayPause() {
-        if (audio.paused) {
-            audio.play();
-            playPauseBtn.children[0].src = "pause.png";
-        } else {
-            audio.pause();
-            playPauseBtn.children[0].src = "play.png";
-        }
-    }
+  const stopAudio = () => {
+    audio.pause();
+    audio.currentTime = 0;
+    playPauseBtn.firstElementChild.src = 'play.png';
+    sessionStorage.setItem('currentTime', 0);
+    sessionStorage.setItem('isPlaying', false);
+  };
 
-    function stopAudio() {
-        audio.pause();
-        audio.currentTime = 0;
-        playPauseBtn.children[0].src = "play.png";
-    }
-
-    function nextSong() {
-        currentSongIndex = (currentSongIndex + 1) % songs.length;
-        loadSong(currentSongIndex);
-        audio.play();
-    }
-
-    function prevSong() {
-        currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
-        loadSong(currentSongIndex);
-        audio.play();
-    }
-
-    function shuffleSong() {
-        let newIndex;
-        do {
-            newIndex = Math.floor(Math.random() * songs.length);
-        } while (newIndex === currentSongIndex);
-        currentSongIndex = newIndex;
-        loadSong(currentSongIndex);
-        audio.play();
-    }
-
-    playPauseBtn.addEventListener("click", togglePlayPause);
-    stopBtn.addEventListener("click", stopAudio);
-    nextBtn.addEventListener("click", nextSong);
-    prevBtn.addEventListener("click", prevSong);
-    shuffleBtn.addEventListener("click", shuffleSong);
-
-    // Listen for messages from the parent window
-    window.addEventListener('message', (event) => {
-        if (event.data.songIndex) {
-            // Load the song with the specified index
-            currentSongIndex = event.data.songIndex;
-            loadSong(currentSongIndex);
-        }
-    });
-
+  const nextSong = () => {
+    currentSongIndex = (currentSongIndex + 1) % songs.length;
     loadSong(currentSongIndex);
+    audio.play();
+    sessionStorage.setItem('isPlaying', true);
+  };
+
+  const prevSong = () => {
+    currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+    loadSong(currentSongIndex);
+    audio.play();
+    sessionStorage.setItem('isPlaying', true);
+  };
+
+  const shuffleSong = () => {
+    let newIndex;
+    do {
+      newIndex = Math.floor(Math.random() * songs.length);
+    } while (newIndex === currentSongIndex);
+    currentSongIndex = newIndex;
+    loadSong(currentSongIndex);
+    audio.play();
+    sessionStorage.setItem('isPlaying', true);
+  };
+
+  playPauseBtn.addEventListener('click', () => {
+    togglePlayPause();
+    sessionStorage.setItem('isPlaying', !audio.paused);
+  });
+  stopBtn.addEventListener('click', () => {
+    stopAudio();
+    sessionStorage.setItem('isPlaying', false);
+    sessionStorage.setItem('currentTime', 0);
+  });
+  nextBtn.addEventListener('click', nextSong);
+  prevBtn.addEventListener('click', prevSong);
+  shuffleBtn.addEventListener('click', shuffleSong);
+
+  audio.addEventListener('timeupdate', () => {
+    sessionStorage.setItem('currentTime', audio.currentTime);
+  });
+  window.addEventListener('beforeunload', () => {
+    sessionStorage.setItem('currentTime', audio.currentTime);
+    sessionStorage.setItem('isPlaying', !audio.paused);
+  });
+
+  loadSong(currentSongIndex);
+  if (savedTime !== null) {
+    audio.currentTime = parseFloat(savedTime);
+  }
+  if (wasPlaying) {
+    audio.play();
+    playPauseBtn.firstElementChild.src = 'pause.png';
+  }
 </script>
 
 </body>
 </html>
+

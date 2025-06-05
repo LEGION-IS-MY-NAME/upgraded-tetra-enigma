@@ -4,6 +4,7 @@
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <link rel="stylesheet" href="styles.css">
+      <link rel="stylesheet" href="player.css">
       <title>Music & Discography</title>
     </head>
     <body>
@@ -33,22 +34,11 @@
           <li>2020 - "Machine Liberation" (Blind Mice Productions)</li>
           <li>2022 - Refuse: Volume One (Crunch Pod Records)</li>
         </ul><br>
-        <iframe id="myMusicPlayer" src="player.html" width="300" height="40" style="border:none; overflow:hidden;"></iframe>      </main>
+      </main>
       <footer>
+        <iframe id="myMusicPlayer" src="player.html" width="300" height="40" style="border:none; overflow:hidden;"></iframe>
         <p>Follow us on <a href="https://www.instagram.com/riotlegion.official/">Instagram</a>, <a href="https://www.facebook.com/RiotLegionOfficial/">Facebook</a>, <a href="https://www.youtube.com/channel/UCLt4WbnqjuGehHOc8QdeaLw">YouTube</a></p>
       </footer>
-            <script>
-            // Get the music player iframe
-            const musicPlayerIframe = document.getElementById('myMusicPlayer');
-
-            // Check if a current song index is stored in sessionStorage
-            const savedSongIndex = sessionStorage.getItem('currentSongIndex');
-
-            // If an index was found, send a message to the iframe to load the song
-            if (savedSongIndex) {
-                musicPlayerIframe.contentWindow.postMessage({ songIndex: savedSongIndex }, '*');
-            }
-        </script>
-	</body>
+        </body>
 
     </html>
