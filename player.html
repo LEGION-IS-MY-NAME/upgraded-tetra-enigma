@@ -87,7 +87,7 @@
         { title: "We Own The Night (Cold and Bare Mix)", src: "https://od.lk/d/Nl8yMTMwMzExODlf/wotn.mp3" }
     ];
 
-    let currentSongIndex = 0;
+    let currentSongIndex = parseInt(sessionStorage.getItem('currentSongIndex') || '0');
 
     function loadSong(index) {
         audio.src = songs[index].src;
@@ -141,6 +141,35 @@
     nextBtn.addEventListener("click", nextSong);
     prevBtn.addEventListener("click", prevSong);
     shuffleBtn.addEventListener("click", shuffleSong);
+
+    // Persist playback position and state
+    audio.addEventListener('timeupdate', () => {
+        sessionStorage.setItem('currentTime', audio.currentTime);
+    });
+
+    audio.addEventListener('play', () => {
+        sessionStorage.setItem('isPlaying', 'true');
+    });
+
+    audio.addEventListener('pause', () => {
+        sessionStorage.setItem('isPlaying', 'false');
+    });
+
+    function restorePlayback() {
+        const savedIndex = parseInt(sessionStorage.getItem('currentSongIndex') || '0');
+        const savedTime = parseFloat(sessionStorage.getItem('currentTime') || '0');
+        const wasPlaying = sessionStorage.getItem('isPlaying') === 'true';
+
+        if (savedIndex === currentSongIndex && savedTime) {
+            audio.currentTime = savedTime;
+        }
+        if (wasPlaying) {
+            audio.play();
+            playPauseBtn.children[0].src = "pause.png";
+        }
+    }
+
+    audio.addEventListener('loadedmetadata', restorePlayback);
 
     // Listen for messages from the parent window
     window.addEventListener('message', (event) => {
