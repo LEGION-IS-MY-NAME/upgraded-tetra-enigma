@@ -1,4 +1,4 @@
-// Admin panel functionality
+// Admin panel functionality for local server edits
 
 // ensure default password exists
 if (!localStorage.getItem('adminPassword')) {
@@ -14,6 +14,23 @@ function showPanel() {
   byId('adminPanel').style.display = 'block';
 }
 
+async function loadSnippet(page) {
+  const r = await fetch('/api/edits/' + page);
+  return r.text();
+}
+
+async function saveSnippet(page, content) {
+  await fetch('/api/edits/' + page, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({content})
+  });
+}
+
+async function deleteSnippet(page) {
+  await fetch('/api/edits/' + page, {method: 'DELETE'});
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   byId('loginButton').addEventListener('click', () => {
     const stored = localStorage.getItem('adminPassword');
@@ -25,20 +42,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  byId('loadContent').addEventListener('click', () => {
+  byId('loadContent').addEventListener('click', async () => {
     const page = byId('pageSelect').value;
-    byId('editor').value = localStorage.getItem('edits_' + page) || '';
+    byId('editor').value = await loadSnippet(page);
   });
 
-  byId('saveContent').addEventListener('click', () => {
+  byId('saveContent').addEventListener('click', async () => {
     const page = byId('pageSelect').value;
-    localStorage.setItem('edits_' + page, byId('editor').value);
+    await saveSnippet(page, byId('editor').value);
     alert('Saved');
   });
 
-  byId('deleteContent').addEventListener('click', () => {
+  byId('deleteContent').addEventListener('click', async () => {
     const page = byId('pageSelect').value;
-    localStorage.removeItem('edits_' + page);
+    await deleteSnippet(page);
     byId('editor').value = '';
   });
 

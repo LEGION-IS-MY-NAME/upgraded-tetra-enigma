@@ -31,10 +31,11 @@ const quotes = [
 setInterval(changeQuote, 5000);
 changeQuote();
 
-// load saved edits for the current page
-function applyEdits(url) {
+// load saved edits for the current page from server
+async function applyEdits(url) {
   const page = url.split('/').pop();
-  const saved = localStorage.getItem('edits_' + page);
+  const r = await fetch('/api/edits/' + page);
+  const saved = await r.text();
   if (saved) {
     const container = document.getElementById('content') || document.querySelector('main');
     if (container) {
