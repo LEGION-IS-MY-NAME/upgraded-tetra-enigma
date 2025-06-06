@@ -31,6 +31,21 @@ const quotes = [
 setInterval(changeQuote, 5000);
 changeQuote();
 
+// load saved edits for the current page from server
+async function applyEdits(url) {
+  const page = url.split('/').pop();
+  const r = await fetch('/api/edits/' + page);
+  const saved = await r.text();
+  if (saved) {
+    const container = document.getElementById('content') || document.querySelector('main');
+    if (container) {
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = saved;
+      container.appendChild(wrapper);
+    }
+  }
+}
+
 // basic PJAX navigation to keep the player alive
 function loadContent(url, addHistory = true) {
   fetch(url)
@@ -44,6 +59,7 @@ function loadContent(url, addHistory = true) {
       if (addHistory) {
         history.pushState({}, '', url);
       }
+      applyEdits(url);
     });
 }
 
@@ -60,4 +76,7 @@ window.addEventListener('popstate', () => {
   loadContent(location.pathname, false);
 });
 
-document.addEventListener('DOMContentLoaded', setupNavigation);
+document.addEventListener('DOMContentLoaded', () => {
+  setupNavigation();
+  applyEdits(location.pathname.split('/').pop() || 'index.html');
+});
