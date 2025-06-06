@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Admin Panel</title>
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="music.html">Music</a></li>
+        <li><a href="merch.html">Merch</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="forum.html">Forum</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <div id="login">
+      <h2>Admin Login</h2>
+      <input type="password" id="passwordInput" placeholder="Password">
+      <button id="loginButton">Login</button>
+      <p id="loginError"></p>
+    </div>
+    <div id="adminPanel" style="display:none;">
+      <h1>Site Editor</h1>
+      <label for="pageSelect">Select page:</label>
+      <select id="pageSelect">
+        <option value="index.html">Home</option>
+        <option value="about.html">About</option>
+        <option value="music.html">Music</option>
+        <option value="merch.html">Merch</option>
+        <option value="blog.html">Blog</option>
+        <option value="contact.html">Contact</option>
+        <option value="forum.html">Forum</option>
+      </select>
+      <button id="loadContent">Load Saved Content</button>
+      <textarea id="editor" rows="10" cols="50"></textarea>
+      <div>
+        <button id="saveContent">Save</button>
+        <button id="deleteContent">Delete</button>
+      </div>
+      <h2>Change Password</h2>
+      <input type="password" id="newPassword" placeholder="New Password">
+      <button id="changePassword">Change Password</button>
+      <p id="passwordMessage"></p>
+    </div>
+  </main>
+  <script src="admin.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
